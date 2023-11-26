@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import { ethers } from 'ethers';
+import ABI from '../contracts/Vault_ABI.json'
 
-const vaultAddress = '0xC7FB3089baE256a222dCE47Fb2880D130be9F3C9';
+const vaultAddress = '0xf3E5068046afb96C19930868e7B39c6556124697';
 
 // Get contract's abi
 const vault = new ethers.Contract(vaultAddress, ABI);
 
 const Lending = () => {
-    const [address, setAddress] = useState();
 
     const connectWallet = async () => {
         // Asking if metamask is already present or not
@@ -16,7 +16,6 @@ const Lending = () => {
             window.ethereum
                 .request({ method: "eth_requestAccounts" })
                 .then( async (res) => {
-                    setAddress(res[0])
                     const chainId = 4201;
                     if (window.ethereum.networkVersion !== chainId) {
                         try {
@@ -49,16 +48,10 @@ const Lending = () => {
 
     const handleDeposit = async (input) => {
       try {
-        // Connect to a signer (for sending transactions)
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-    
-        // Get the contract interface
-        const contractWithSigner = contract.connect(signer);
-    
-        // Call the contract function (assuming the function is called 'deposit')
-        const tx = await contractWithSigner.deposit({ value: ethers.utils.parseEther(amount) });
-    
-        // Wait for the transaction to be mined
+        const contractWithSigner = vault.connect(signer);
+        const tx = await contractWithSigner.deposit(input, { value: ethers.utils.parseEther(input) });
         await tx.wait();
     
         console.log('Deposit successful!');
