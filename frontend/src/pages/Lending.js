@@ -3,49 +3,80 @@ import { Link } from 'react-router-dom';
 import { ethers } from 'ethers';
 import ABI from '../contracts/Vault_ABI.json'
 
-const vaultAddress = '0xf3E5068046afb96C19930868e7B39c6556124697';
+import Onboard from '@web3-onboard/core'
+import injectedModule from '@web3-onboard/injected-wallets'
+
+const vaultAddress = '0xC3b25af71bFF4afc209812984b95E7d73bB00F73';
 
 const Lending = () => {
+  const [borrowableValue, setBorrowableValue] = useState(0);
+  const [collateralValue, setCollateralValue] = useState(0);
+  const [walletAddress, setWalletAddress] = useState('');
 
     const connectWallet = async () => {
         // Asking if metamask is already present or not
-        if (window.ethereum) {
-            window.ethereum
-                .request({ method: "eth_requestAccounts" })
-                .then( async (res) => {
-                    const chainId = 4201;
-                    if (window.ethereum.networkVersion !== chainId) {
-                        try {
-                          await window.ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: ethers.utils.hexlify(chainId) }]
-                          });
-                        } catch (err) {
-                            // This error code indicates that the chain has not been added to MetaMask
-                          if (err.code === 4902) {
-                            await window.ethereum.request({
-                              method: 'wallet_addEthereumChain',
-                              params: [
-                                {
-                                  chainName: 'Testnet',
-                                  chainId: ethers.utils.hexlify(chainId),
-                                  nativeCurrency: { name: 'LYXt', decimals: 18, symbol: 'LYXt' },
-                                  rpcUrls: ['https://rpc.testnet.lukso.network']
-                                }
-                              ]
-                            });
-                          }
-                        }
-                      }
-                });
-        } else {
-            alert("Install Universal Profile wallet!");
+        // if (window.ethereum) {
+        //     window.ethereum
+        //         .request({ method: "eth_requestAccounts" })
+        //         .then( async (res) => {
+        //             const chainId = 4201;
+        //             if (window.ethereum.networkVersion !== chainId) {
+        //                 try {
+        //                   await window.ethereum.request({
+        //                     method: 'wallet_switchEthereumChain',
+        //                     params: [{ chainId: ethers.utils.hexlify(chainId) }]
+        //                   });
+        //                 } catch (err) {
+        //                     // This error code indicates that the chain has not been added to MetaMask
+        //                   if (err.code === 4902) {
+        //                     await window.ethereum.request({
+        //                       method: 'wallet_addEthereumChain',
+        //                       params: [
+        //                         {
+        //                           chainName: 'Testnet',
+        //                           chainId: ethers.utils.hexlify(chainId),
+        //                           nativeCurrency: { name: 'LYXt', decimals: 18, symbol: 'LYXt' },
+        //                           rpcUrls: ['https://rpc.testnet.lukso.network']
+        //                         }
+        //                       ]
+        //                     });
+        //                   }
+        //                 }
+        //               }
+        //         });
+        // } else {
+        //     alert("Install Universal Profile wallet!");
+        // }
+
+        const injected = injectedModule()
+        
+        const onboard = Onboard({
+          wallets: [injected],
+          chains: [
+            {
+              id: '4201',
+              token: 'LYXt',
+              label: 'Testnet',
+              rpcUrl: 'https://rpc.testnet.lukso.network'
+            },
+          ]
+        })
+        
+        const wallets = await onboard.connectWallet()
+        
+        console.log(wallets)
+        
+        if (wallets[0]) {
+          setWalletAddress(wallets[0].provider);
+        }
+        else {
+          console.error("Invalid wallet.")
         }
     };
 
     const handleDeposit = async (input) => {
       try {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const provider = new ethers.providers.Web3Provider(walletAddress);
         const signer = provider.getSigner();
         const vault = new ethers.Contract(vaultAddress, ABI, signer);
         
@@ -60,7 +91,7 @@ const Lending = () => {
 
     const handleWithdraw = async (input) => {
       try {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const provider = new ethers.providers.Web3Provider(walletAddress);
         const signer = provider.getSigner();
         const vault = new ethers.Contract(vaultAddress, ABI, signer);
         
@@ -73,27 +104,32 @@ const Lending = () => {
       }
     };
 
-    const handleWithdrawable = async (input) => {
+    const handleBorrowable = async (input) => { //estimateTokenAmount
       try {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const provider = new ethers.providers.Web3Provider(walletAddress);
         const signer = provider.getSigner();
         const vault = new ethers.Contract(vaultAddress, ABI, signer);
         
-        const tx = await vault.withdraw(input.toString());
-        await tx.wait();
-    
-        alert('Deposit successful!');
+        const tx = await vault.estimateTokenAmount(input);
+        setBorrowableValue(ethers.utils.formatEther(tx));
+        console.log(ethers.utils.formatEther(tx));
       } catch (error) {
         console.error('Error occurred:', error);
       }
     };
 
-    const handleBorrowable = async (input) => {
-
-    };
-
     const handleCollateral = async (input) => {
-
+      try {
+        const provider = new ethers.providers.Web3Provider(walletAddress);
+        const signer = provider.getSigner();
+        const vault = new ethers.Contract(vaultAddress, ABI, signer);
+        
+        const tx = await vault.estimateCollateralAmount(ethers.utils.parseUnits(input,"ether"));
+        setCollateralValue(ethers.utils.formatEther(tx));
+        console.log(ethers.utils.formatEther(tx));
+      } catch (error) {
+        console.error('Error occurred:', error);
+      }
     };
 
     return (
@@ -171,22 +207,6 @@ const Lending = () => {
               <div className="text-white">
                 <h2 className="text-2xl font-semibold mb-4">Statistics</h2>
                 <ul className="space-y-4">
-                  {/* Withdrawable */}
-                  <li className="flex items-center space-x-4">
-                    <button 
-                      className="bg-[#fff4fc] hover:bg-[#fff4fc] text-black font-bold py-2 px-4 rounded"
-                      onClick={() => handleWithdrawable(document.getElementById('withdrawableAmount').value)}
-                    >
-                      Withdrawable
-                    </button>
-                    <input
-                    id="withdrawableAmount"
-                      type="text"
-                      className="rounded px-3 py-1 focus:outline-none focus:border-blue-500 text-black"
-                      placeholder="Repayment amount"
-                    />
-                    <span className="text-white">1000</span>
-                  </li>
                   {/* Borrowable amount */}
                   <li className="flex items-center space-x-4">
                     <button 
@@ -199,9 +219,9 @@ const Lending = () => {
                       id="borrowableAmount"
                       type="text"
                       className="rounded px-3 py-1 focus:outline-none focus:border-blue-500 text-black"
-                      placeholder="Deposit amount"
+                      placeholder="Collateral amount"
                     />
-                    <span className="text-white">5000</span>
+                    <span className="text-white">{borrowableValue}</span>
                   </li>
                   {/* Collateral amount */}
                   <li className="flex items-center space-x-4">
@@ -209,7 +229,7 @@ const Lending = () => {
                       className="bg-[#fff4fc] hover:bg-[#fff4fc] text-black font-bold py-2 px-4 rounded"
                       onClick={() => handleCollateral(document.getElementById('collateralAmount').value)}
                     >
-                      Collateral amount
+                      Withdrawable collateral amount
                     </button>
                     <input
                       id="collateralAmount"
@@ -217,7 +237,7 @@ const Lending = () => {
                       className="rounded px-3 py-1 focus:outline-none focus:border-blue-500 text-black"
                       placeholder="Repayment amount"
                     />
-                    <span className="text-white">5000</span>
+                    <span className="text-white">{collateralValue}</span>
                   </li>
                 </ul>
               </div>
