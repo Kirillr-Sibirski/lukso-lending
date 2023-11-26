@@ -5,9 +5,6 @@ import ABI from '../contracts/Vault_ABI.json'
 
 const vaultAddress = '0xf3E5068046afb96C19930868e7B39c6556124697';
 
-// Get contract's abi
-const vault = new ethers.Contract(vaultAddress, ABI);
-
 const Lending = () => {
 
     const connectWallet = async () => {
@@ -50,22 +47,45 @@ const Lending = () => {
       try {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-        const contractWithSigner = vault.connect(signer);
-        const tx = await contractWithSigner.deposit(input, { value: ethers.utils.parseEther(input) });
+        const vault = new ethers.Contract(vaultAddress, ABI, signer);
+        
+        const tx = await vault.deposit(input.toString(), {value: ethers.utils.parseUnits(input,"ether"),  gasLimit: 300000, gasPrice: ethers.utils.parseUnits('30', 'gwei')});
         await tx.wait();
     
-        console.log('Deposit successful!');
+        alert('Deposit successful!');
       } catch (error) {
         console.error('Error occurred:', error);
       }
     };
 
     const handleWithdraw = async (input) => {
-      
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const vault = new ethers.Contract(vaultAddress, ABI, signer);
+        
+        const tx = await vault.withdraw(input.toString());
+        await tx.wait();
+    
+        alert('Withraw successful!');
+      } catch (error) {
+        console.error('Error occurred:', error);
+      }
     };
 
     const handleWithdrawable = async (input) => {
-
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const vault = new ethers.Contract(vaultAddress, ABI, signer);
+        
+        const tx = await vault.withdraw(input.toString());
+        await tx.wait();
+    
+        alert('Deposit successful!');
+      } catch (error) {
+        console.error('Error occurred:', error);
+      }
     };
 
     const handleBorrowable = async (input) => {
