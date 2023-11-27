@@ -6,7 +6,7 @@ import ABI from '../contracts/Vault_ABI.json'
 import Onboard from '@web3-onboard/core'
 import injectedModule from '@web3-onboard/injected-wallets'
 
-const vaultAddress = '0x45828E837e12637fB6397e0e3a881DA1B713479a';
+const vaultAddress = '0x451C61F95e2333CD68c7850eFAb4E3b3523BF91e';
 
 const Lending = () => {
   const [borrowableValue, setBorrowableValue] = useState(0);
