@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { ethers } from 'ethers';
 import ABI from '../contracts/Vault_ABI.json'
@@ -6,12 +6,39 @@ import ABI from '../contracts/Vault_ABI.json'
 import Onboard from '@web3-onboard/core'
 import injectedModule from '@web3-onboard/injected-wallets'
 
-const vaultAddress = '0x002944c73459DfF28a98742dc829f9F04F6Eb214';
+const vaultAddress = '0x45828E837e12637fB6397e0e3a881DA1B713479a';
 
 const Lending = () => {
   const [borrowableValue, setBorrowableValue] = useState(0);
   const [collateralValue, setCollateralValue] = useState(0);
   const [walletAddress, setWalletAddress] = useState('');
+  const [interestRate, setInterestRate] = useState('underfined');
+  const [debtValue, setDebtValue] = useState('underfined');
+  const [collateralValueDeployed, setCollateralValueDeployed] = useState('underfined');
+  const [borrowedAmount, setBorrowedAmount] = useState('underfined');
+
+  useEffect( () => {
+    pingStuff();
+  }); // Empty dependency array ensures this effect runs only once (on mount)
+
+    const pingStuff = async () => {
+      if(walletAddress != '') {
+        const provider = new ethers.providers.Web3Provider(walletAddress);
+        const signer = provider.getSigner();
+        const vault = new ethers.Contract(vaultAddress, ABI, signer);
+        const tx = await vault.getInterestRate();
+        setInterestRate(tx.toString());
+
+        const ty = await vault.getDebt(await signer.getAddress());
+        setDebtValue(ethers.utils.formatEther(ty));
+
+        const ti = await vault.getCollateralValue(await signer.getAddress());
+        setCollateralValueDeployed(ethers.utils.formatEther(ti));
+
+        const tj = await vault.getDebtValue(await signer.getAddress());
+        setBorrowedAmount(ethers.utils.formatEther(tj));
+      }
+    }
 
     const connectWallet = async () => {
         const injected = injectedModule()
@@ -45,8 +72,10 @@ const Lending = () => {
         const provider = new ethers.providers.Web3Provider(walletAddress);
         const signer = provider.getSigner();
         const vault = new ethers.Contract(vaultAddress, ABI, signer);
+
+        console.log(ethers.utils.parseUnits(input, "ether"));
         
-        const tx = await vault.deposit(ethers.utils.parseEther(input), {value: ethers.utils.parseEther(input),  gasLimit: 300000, gasPrice: ethers.utils.parseUnits('30', 'gwei')});
+        const tx = await vault.deposit(ethers.utils.parseUnits(input, "ether"), {value: ethers.utils.parseUnits(input, "ether"),  gasLimit: 3000000, gasPrice: ethers.utils.parseUnits('30', 'gwei')});
         await tx.wait();
     
         alert('Deposit successful!');
@@ -173,6 +202,23 @@ const Lending = () => {
               <div className="text-white">
                 <h2 className="text-2xl font-semibold mb-4">Statistics</h2>
                 <ul className="space-y-4">
+                  <li className="flex items-center space-x-4">
+                    <span className="text-white">Current interest rate:</span>
+                    <span className="text-white">{interestRate}%</span>
+                  </li>
+                  <li className="flex items-center space-x-4">
+                    <span className="text-white">Your debt:</span>
+                    <span className="text-white">{debtValue} USD</span>
+                  </li>
+
+                  <li className="flex items-center space-x-4">
+                    <span className="text-white">Collateral amount:</span>
+                    <span className="text-white">{collateralValueDeployed} LYXt</span>
+                  </li>
+                  <li className="flex items-center space-x-4">
+                    <span className="text-white">Borrowed:</span>
+                    <span className="text-white">{borrowedAmount} USD</span>
+                  </li>
                   {/* Borrowable amount */}
                   <li className="flex items-center space-x-4">
                     <button 
@@ -187,7 +233,7 @@ const Lending = () => {
                       className="rounded px-3 py-1 focus:outline-none focus:border-blue-500 text-black"
                       placeholder="Collateral amount"
                     />
-                    <span className="text-white">{borrowableValue}</span>
+                    <span className="text-white">{borrowableValue} USD</span>
                   </li>
                   {/* Collateral amount */}
                   <li className="flex items-center space-x-4">
@@ -203,7 +249,7 @@ const Lending = () => {
                       className="rounded px-3 py-1 focus:outline-none focus:border-blue-500 text-black"
                       placeholder="Repayment amount"
                     />
-                    <span className="text-white">{collateralValue}</span>
+                    <span className="text-white">{collateralValue} LYXt</span>
                   </li>
                 </ul>
               </div>

@@ -18,6 +18,10 @@ contract Vault is IVault, Ownable {
     LoanStatistics public loanCollection;
     // using SafeMath for uint256;
 
+    uint256 public constant interestRate = 5; // 5% per year
+    mapping(address => uint256) public depositedAt;
+    mapping(address => uint256) public interestAccumulated;
+
     constructor(Stablecoin _token, PriceConsumerV3 _oracle, LoanStatistics _loanCollection){
         token = _token;
         oracle = _oracle;
@@ -39,6 +43,15 @@ contract Vault is IVault, Ownable {
         require(amountToDeposit == msg.value, "Incorrect LYXt amount");
         uint256 amountToMint = amountToDeposit * getEthUSDPrice();
         token.mint(msg.sender, amountToMint);
+        // Calculate interest since the last deposit
+        if (depositedAt[msg.sender] != 0) {
+            uint256 timeElapsed = block.timestamp - depositedAt[msg.sender];
+            uint256 interest = (vaults[msg.sender].debtAmount * interestRate * timeElapsed) / (365 days * 100);
+            interestAccumulated[msg.sender] += interest;
+        }
+
+        depositedAt[msg.sender] = block.timestamp;
+
         if(vaults[msg.sender].collateralAmount == 0 && vaults[msg.sender].debtAmount == 0) {
             loanCollection.mint(msg.sender, bytes(abi.encodePacked("Collateral amount: ", amountToDeposit, " Debt amount: ", amountToMint)));
         }
@@ -53,10 +66,21 @@ contract Vault is IVault, Ownable {
     @param repaymentAmount  the amount of stablecoin that a user is repaying to redeem their collateral for.
      */
     function withdraw(uint256 repaymentAmount) override external {
-        require(repaymentAmount <= vaults[msg.sender].debtAmount, "withdraw limit exceeded"); 
+        
         require(token.balanceOf(msg.sender) >= repaymentAmount, "not enough tokens in balance");
+        
+        if (depositedAt[msg.sender] != 0) {
+            uint256 timeElapsed = block.timestamp - depositedAt[msg.sender];
+            uint256 interest = (vaults[msg.sender].debtAmount * interestRate * timeElapsed) / (365 days * 100);
+            interestAccumulated[msg.sender] += interest;
+            depositedAt[msg.sender] = block.timestamp;
+        }
+        require(repaymentAmount <= (vaults[msg.sender].debtAmount+interestAccumulated[msg.sender]), "withdraw limit exceeded"); 
+
+        depositedAt[msg.sender] = block.timestamp;
         uint256 amountToWithdraw = repaymentAmount / getEthUSDPrice();
         token.burn(msg.sender, repaymentAmount);
+
         vaults[msg.sender].collateralAmount -= amountToWithdraw;
         vaults[msg.sender].debtAmount -= repaymentAmount;
         if(vaults[msg.sender].collateralAmount <= 0 && vaults[msg.sender].debtAmount <= 0) {
@@ -109,5 +133,31 @@ contract Vault is IVault, Ownable {
 
     function getOracle() public view returns (address) {
         return address(oracle);
+    }
+
+    function getInterestRate() external pure returns (uint256) {
+        return interestRate;
+    }
+
+    function getCurrentInterest(address user)
+        external
+        view
+        returns (uint256)
+    {
+        uint256 timeElapsed = block.timestamp - depositedAt[user];
+        uint256 interest = (vaults[user].debtAmount * interestRate * timeElapsed) / (365 days * 100);
+        return interest;
+    }
+
+    function getDebt(address user) external view returns(uint256) {
+        return vaults[user].debtAmount+interestAccumulated[msg.sender];
+    }
+
+    function getCollateralValue(address user) external view returns(uint256) {
+        return vaults[user].collateralAmount;
+    }
+
+    function getDebtValue(address user) external view returns(uint256) {
+        return vaults[user].debtAmount;
     }
 }
