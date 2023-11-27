@@ -1,0 +1,792 @@
+{
+	"compiler": {
+		"version": "0.8.22+commit.4fc1097e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract Stablecoin",
+						"name": "_token",
+						"type": "address"
+					},
+					{
+						"internalType": "contract PriceConsumerV3",
+						"name": "_oracle",
+						"type": "address"
+					},
+					{
+						"internalType": "contract LoanStatistics",
+						"name": "_loanCollection",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "collateralDeposited",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountMinted",
+						"type": "uint256"
+					}
+				],
+				"name": "Deposit",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "collateralWithdrawn",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountBurned",
+						"type": "uint256"
+					}
+				],
+				"name": "Withdraw",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amountToDeposit",
+						"type": "uint256"
+					}
+				],
+				"name": "deposit",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "repaymentAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "estimateCollateralAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "collateralAmount",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "depositAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "estimateTokenAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenAmount",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getEthUSDPrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getOracle",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getToken",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					}
+				],
+				"name": "getVault",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "collateralAmount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "debtAmount",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct IVault.Vault",
+						"name": "vault",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "loanCollection",
+				"outputs": [
+					{
+						"internalType": "contract LoanStatistics",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_oracle",
+						"type": "address"
+					}
+				],
+				"name": "setOracle",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "source",
+						"type": "string"
+					}
+				],
+				"name": "stringToBytes32",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "result",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "token",
+				"outputs": [
+					{
+						"internalType": "contract Stablecoin",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "repaymentAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "withdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"deposit(uint256)": {
+					"params": {
+						"amountToDeposit": "The amount of ether the user sent in the transaction"
+					}
+				},
+				"estimateCollateralAmount(uint256)": {
+					"params": {
+						"repaymentAmount": "the amount of stable coin that would be repaid"
+					},
+					"returns": {
+						"collateralAmount": "the estimated amount of a vault's collateral that would be returned "
+					}
+				},
+				"estimateTokenAmount(uint256)": {
+					"params": {
+						"depositAmount": "the amount of ETH that would be deposited"
+					},
+					"returns": {
+						"tokenAmount": " the estimated amount of stablecoin that would be minted"
+					}
+				},
+				"getVault(address)": {
+					"params": {
+						"userAddress": "the address of the vault owner"
+					},
+					"returns": {
+						"vault": " the vault details"
+					}
+				},
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				},
+				"withdraw(uint256)": {
+					"details": "This cannot allow a user to withdraw more than they put in",
+					"params": {
+						"repaymentAmount": "the amount of stablecoin that a user is repaying to redeem their collateral for."
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"deposit(uint256)": {
+					"notice": "Allows a user to deposit ETH collateral in exchange for some amount of stablecoin"
+				},
+				"estimateCollateralAmount(uint256)": {
+					"notice": "Returns an estimate of how much collateral could be withdrawn for a given amount of stablecoin"
+				},
+				"estimateTokenAmount(uint256)": {
+					"notice": "Returns an estimate on how much stable coin could be minted at the current rate"
+				},
+				"getVault(address)": {
+					"notice": "Returns the details of a vault"
+				},
+				"withdraw(uint256)": {
+					"notice": "Allows a user to withdraw up to 100% of the collateral they have on deposit"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/implementation/Vault.sol": "Vault"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@erc725/smart-contracts/contracts/ERC725Y.sol": {
+			"keccak256": "0x4cb23ef9c2c93d881737c47cd0eebd63dcb39828484fda1fd3a5ce9971df3ef7",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://ff707e4552e8e442ff88d8b961583912664eaee373b49f03b1e6c4cd28213938",
+				"dweb:/ipfs/QmVELUkQr3TikdEZoG9cxhwUCknuvSYVGKwpeDF76XiZpb"
+			]
+		},
+		"@erc725/smart-contracts/contracts/ERC725YCore.sol": {
+			"keccak256": "0x90670a99b91307ed47851fcc72cee06f246f49a1810307c9e2f978116bbabfc4",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://06a94fdd05c104d4d1368398ed4b00926d27c1485a5130aeb257bc904671bcc0",
+				"dweb:/ipfs/Qmdsph9AnSiAvYpmgVXfy3Do5dCWKBVL3xWMeGaT7qjte2"
+			]
+		},
+		"@erc725/smart-contracts/contracts/constants.sol": {
+			"keccak256": "0x37da1619e580b6af6a68e91b4784f7945ee2344fad3a96b6dfb2592e35fedb60",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://fb9436bd587d7b38c532f317dbd4bc5f178b50906b1a5e29adf24908f27b2c47",
+				"dweb:/ipfs/QmW2vTCNM7Mr4vW5t9yBK7Zmh1FtaVjPwdAbyFcPNBSZYL"
+			]
+		},
+		"@erc725/smart-contracts/contracts/custom/OwnableUnset.sol": {
+			"keccak256": "0xa9c83adb0239b86c0ff6251a03bc70115470c7ae10eb99276d6dd33636054b36",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://95a0109837bdffe887b6568b7f9bbde2b20cfd0c4db638805cf61ada5743b24d",
+				"dweb:/ipfs/QmYH2erMtqiEYjRznWnc6NbBbwxvy6ArE45jtXYEyWi3Bc"
+			]
+		},
+		"@erc725/smart-contracts/contracts/errors.sol": {
+			"keccak256": "0xaafdb4370450b8874224b3c0b2b712149da97a50c9a47f56e4b654aa57eb87c5",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://a4e40b0f64613e5bbd62575facc72d2bcad249595e9397b5bff063dc5a81e757",
+				"dweb:/ipfs/QmXx5yDvPxWzKXFYK7HDAbSNDBKRskYLoDwgrThmAimzDL"
+			]
+		},
+		"@erc725/smart-contracts/contracts/interfaces/IERC725Y.sol": {
+			"keccak256": "0xa47c9e3eba0c733a1685b9fa309f753540c89ad2dca73236a2c953e7f5680e7b",
+			"license": "CC0-1.0",
+			"urls": [
+				"bzz-raw://59076395f660838919a2068cb7792c0fa70533642bbc5b4e3cc3cbb2c9ec7b50",
+				"dweb:/ipfs/QmQqew3mDuyHCBdd4v1JiwRiKEbzk3LeHchzTHSdyhYg5b"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP17ContractExtension/LSP17Constants.sol": {
+			"keccak256": "0x6d4bb208587872ad563fef31655c44f7de03baa5b4a513910c0003aea0c04036",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://880c3b21e2090a14e7bba94ac5c8d4633e8a81d93c6f619454167a01dcc866d8",
+				"dweb:/ipfs/QmZp6YVM4Eor5XtuXXqGRaPAJ3u5KCmLwuNRAGf4JY7sK1"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP17ContractExtension/LSP17Errors.sol": {
+			"keccak256": "0x75a0159f76a3c5bf26b13aa404aca2f588ea41928eb1483683e29d2031fe5abf",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://f1b93e7eb5a88a2f42a9dfa061ca5e93e7650cd9114010faa18faf0a5508f579",
+				"dweb:/ipfs/QmXmLhf1ejsF7G1FZnvpTBRS9oQ9ZTuqCBRT1im3vAuUYW"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP17ContractExtension/LSP17Extendable.sol": {
+			"keccak256": "0x5983e916a4cb604a45b585d7f745f5ac8bf69ef51fbc78cf8e70408e29e008c2",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://e1e9a7b8dc210030d35b4e2c3dbb7107f51c063256f7e6120997ed638f033db1",
+				"dweb:/ipfs/QmRQgkaDnC9sAb9mZJtVgBsAR1xfmcTA2erCVUiyszy15o"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP1UniversalReceiver/ILSP1UniversalReceiver.sol": {
+			"keccak256": "0x5b8764a678dc9d6673eafa8ad0ee6053cdea30acb58015bdf9c93f9f1788b49b",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://0e26dcf5d66120b7a0895ddcaec92207e17c63344fca885d2b7e3fe953ec027c",
+				"dweb:/ipfs/QmetAuz9etfz9BG9oPJCwMthnhfd8XvZYLBmMfrPNUm3qV"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP1UniversalReceiver/LSP1Constants.sol": {
+			"keccak256": "0x0f87fc38243fc70316e22814f5a79d9c0770a39f64077cbc6fb5fddfa1d4c23c",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://c7d83f054b71dfa5ca48a9a811e6a985ff6b38a9e5f4c220ea2ec3a322cce7cf",
+				"dweb:/ipfs/QmaehpHpqc5dtRCm9BoU8vCY59AeEnmGvmmwPirVr47oGp"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP1UniversalReceiver/LSP1Utils.sol": {
+			"keccak256": "0x15fca4c3d6bfaec5d1a144762f1e160c6b82e7abb5e5c0ca8fcc5f4301b0c45e",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://ceb307c243e6439d5be18263f75c2ada73d70c5b0480dfd8b12315cacc81fa62",
+				"dweb:/ipfs/QmVPwVhL6NAvUgAWQmV964tEHNWbXY6uej5VLpDorqBVhd"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP2ERC725YJSONSchema/LSP2Utils.sol": {
+			"keccak256": "0x86ce8a85d12c79b76db5413b05b9bff16cd865b395efdc0e85b06b3b5e17219b",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://7ebb6d1152f88b459b9e8fc3ef6361a9fb9d03bfa994148e6b125a2ee4025487",
+				"dweb:/ipfs/QmX18bCecAtrjqKTyCPqRrUuvVYSW1XZZJUgvjfYnqfmEH"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP4DigitalAssetMetadata/LSP4Constants.sol": {
+			"keccak256": "0xa32b02d7ed6d948239a1795d23f7b422b09756e9198fe0c9ae1f6e8ee3c0a6bd",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://45af64c691531c7f4af92ee16cc5fb2a64b5b40235cf0538eba17b4aafea6afb",
+				"dweb:/ipfs/QmeED3A5tsC4ngNtCyiDaCXHxdydHf12D4CmUqH6yg6xNv"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP4DigitalAssetMetadata/LSP4DigitalAssetMetadata.sol": {
+			"keccak256": "0x1221610bdd45aeb1d51ee3f7854dcf49ab4a2490e31eb26e8086bdca49704d0c",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://49fa4a178b44088f02417c2c607fa8d934975a596958026f21abd8270d71965a",
+				"dweb:/ipfs/QmPQJjFnsT8kq7GoUgrDXz5bKht3GaSoZqWor9jnCE2hnM"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP4DigitalAssetMetadata/LSP4Errors.sol": {
+			"keccak256": "0xcd5e9aafdf43cb7f399d59ed9a440545363142e414ee6b2a00ccc313ac891781",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://65aef3cd7d1a300e09a7da8ad406b6b2043c2b83c4cb0b44b63e5f4d81a89c6c",
+				"dweb:/ipfs/QmQd6o52qrha4ZxQRFFDtKd3ACXz1JyFEEJhDzanVkfUJM"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP7DigitalAsset/ILSP7DigitalAsset.sol": {
+			"keccak256": "0x27ddf60c5bab170887b924886d6df01a472edd0e15140173d2e7f1a5e6f256b1",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://a4f5f655bd84cb84eae8f34efb744f58c73490e3fa312efb73faf48778f73924",
+				"dweb:/ipfs/QmZScdGTkkqR5VQXpTAUjLUUnUdvNDbNDFeRtiMSG9HYVu"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP7DigitalAsset/LSP7Constants.sol": {
+			"keccak256": "0x5cb2211b38ccebb542291f45adfd3f4cf5aec78bc13cae8aec044b09dc847015",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://7e507359f537d6d9cf69f93447f7f1eb0807f5faf245e377d2db04644804e5d0",
+				"dweb:/ipfs/QmNkm8nvcHs8mAuLQdraWAEnWcQsThus4r6n5xAU7Yf96R"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP7DigitalAsset/LSP7DigitalAsset.sol": {
+			"keccak256": "0x9a6605a3988c740084a28a6fa10faaeb9d0b66b1a3338805660a67a89652ec69",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://0cf23e27bf3bf63b91ed4604ab3adbb38c9daaba715189abf427c2e1b4779c7a",
+				"dweb:/ipfs/QmRudE4bgQcZpCxnDrCV2ToxKhixo4q7Xc3myP1JfLnE5u"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP7DigitalAsset/LSP7DigitalAssetCore.sol": {
+			"keccak256": "0x3466bdeb0bf67e6891b7aae4df4c41951b915c282d10c7aa85c20d2295e3b2cd",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://61194c6b259ed66e86024e8a09b95bfede3003408e7dd527602fb749b21fabe0",
+				"dweb:/ipfs/QmWxmRgvQLmHUymAGrJAGucNYLVjctX5LQAwSMTDV5phnG"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP7DigitalAsset/LSP7Errors.sol": {
+			"keccak256": "0xdb9b4f83d104e138d61ac5c5a3c5a4f8f11c76db3d93b0b88b2f7010027ac64c",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://483a1f082c00994bc28fff7349eba107dffd1dc976f71353e3ba27075bd3e21e",
+				"dweb:/ipfs/QmNwxapNoq8HqkifetrjnnCrmEUzJvuhmutyiMajkCQMWK"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP7DigitalAsset/extensions/LSP7Burnable.sol": {
+			"keccak256": "0xdcae9141dac1bc9e65c9a543a7438918f04a9d87f5a8864de5b502d113f6bd27",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://07109f94d63138253d31056fbf5f6c2a066857beb50f09d2f26c39c6fe4dd587",
+				"dweb:/ipfs/QmWPn1zs4YoezPwixPbcewbUHfvn2A76TeNjSdpzoT6o7s"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP7DigitalAsset/presets/ILSP7Mintable.sol": {
+			"keccak256": "0x3165b2f938913fcaa7d5823961a560c99ba250cf83132617b0f5d60fef9ed410",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://632a8ff681029956e562f3a7c4624387e4975069a653cbe399f3bca5d1a17aaa",
+				"dweb:/ipfs/QmT9ahMCBtZgMJLYJKuMTEfhYkhmbhPiZeSq6Y7gQsH3Td"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP7DigitalAsset/presets/LSP7Mintable.sol": {
+			"keccak256": "0xff41b71a40df1adbae907ef8b540381e1d96e72060d12f5442e904fbf71d33c9",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://c7882ebc24aca839b1fc741bcd166288564953bd9908d7565b63f7220e0ad59a",
+				"dweb:/ipfs/QmZ8hR85n6zNa4EGkyLdGr7XWUKjuCUuNcQiJn4neSyFBa"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/ILSP8IdentifiableDigitalAsset.sol": {
+			"keccak256": "0xc9a0365b7fffd560b981c38f3c1b031edc5a1665718f2aaf39a924f261fd16c2",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://c74e8c9efc6dcb58b96902e5a595f702c91a9a1b0dadf8478ce6fc2e48ba4464",
+				"dweb:/ipfs/QmfVyvvo9GDghrErdqguN6rfi9NoqHLD8A25YeGFEMnwgq"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol": {
+			"keccak256": "0x4c5fe35f93a8fbddfb62d8fafbd0db15ca047860d96b8e7a9263e5bb235a720a",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://6b83c2ffae1b1d8e8cadd3a09f5feb8a4056fb41048051911b8c3633d0f3e848",
+				"dweb:/ipfs/QmeapSSKGsEQ72RzaBtrFs3phmiwor1fgwjsoS8Eopd55t"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol": {
+			"keccak256": "0x5c3d242a76311e5f8836c51ad511639376ec31c29bff9cbd1cf61903671db9df",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://b28426d183cbccb03ea00b567f0bb984e56ad3d1fd297c675b7e644eec7649ed",
+				"dweb:/ipfs/QmPJ8njEj5TXs61zJKauAcG1N2Hmg4uwkLseZUCZEY7WjP"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol": {
+			"keccak256": "0x7f1e9a24650590682f1ac0b3e714b4d2c8ffd75b294c48d9c37d91dba9f16745",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://0ee4d52971bc99066ad81587e55ff619ae7cabfab863e03cf9cc4961340507f5",
+				"dweb:/ipfs/QmegKw2spY8gQebszAnukz9wznoPeFr8xeQVw6D4PcgaxW"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAssetCore.sol": {
+			"keccak256": "0xa05232a5eea758fd8711551c2e202683ae8d187147048a47eb12a86f2043d86d",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://7461b835dd42a6a02dba4e8b2d147e09708f51d4f2d2430243d64571b4836425",
+				"dweb:/ipfs/QmQw55zUjyUyfNk69PpnEErtVDF5Z3zLbMceLibngPEHtr"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8Burnable.sol": {
+			"keccak256": "0x210594018ea83646a29f1db229dea36eba22c14746fd98234bf74edfe8911d24",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://093b3485e3f2925d68c65c71555d5a30ea589776efe3799c48ef6d6df1198905",
+				"dweb:/ipfs/QmeSEPZUNEoJKvbyZkzVvdfsZb2Dxbu3S8tosiEVx6WEN1"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/presets/ILSP8Mintable.sol": {
+			"keccak256": "0x0c0e24ef911cb9eeaf89d5dd46f0c70f775fdfa639758a005750733561d0bb24",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://42f28128b22b58b4d7a73373d41a82d8bd2cc1bc153beed5903887cf7899f4bd",
+				"dweb:/ipfs/QmRXQGQ8HVm3RnwcVu75As2f3YBK7kLWGoDFofB9DSSyLb"
+			]
+		},
+		"@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/presets/LSP8Mintable.sol": {
+			"keccak256": "0x6575ffa0ebb5bb587e1265dd73fa0a70dee7d15d6c229452837ccf24acd48776",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://42ae86c90cdb0dfee6c8bf9599f299e5b7ac44638655fc0185b77d6f35434000",
+				"dweb:/ipfs/Qmatdi5vLoXgcyZd3eFVk7NWKrWeiZTi7zZQq9xsudGPHN"
+			]
+		},
+		"@openzeppelin/contracts/access/Ownable.sol": {
+			"keccak256": "0xba43b97fba0d32eb4254f6a5a297b39a19a247082a02d6e69349e071e2946218",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fc980984badf3984b6303b377711220e067722bbd6a135b24669ff5069ef9f32",
+				"dweb:/ipfs/QmPHXMSXj99XjSVM21YsY6aNtLLjLVXDbyN76J5HQYvvrz"
+			]
+		},
+		"@openzeppelin/contracts/utils/Context.sol": {
+			"keccak256": "0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6df0ddf21ce9f58271bdfaa85cde98b200ef242a05a3f85c2bc10a8294800a92",
+				"dweb:/ipfs/QmRK2Y5Yc6BK7tGKkgsgn3aJEQGi5aakeSPZvS65PV8Xp3"
+			]
+		},
+		"@openzeppelin/contracts/utils/Strings.sol": {
+			"keccak256": "0x3088eb2868e8d13d89d16670b5f8612c4ab9ff8956272837d8e90106c59c14a0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b81d9ff6559ea5c47fc573e17ece6d9ba5d6839e213e6ebc3b4c5c8fe4199d7f",
+				"dweb:/ipfs/QmPCW1bFisUzJkyjroY3yipwfism9RRCigCcK1hbXtVM8n"
+			]
+		},
+		"@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+			"keccak256": "0xd10975de010d89fd1c78dc5e8a9a7e7f496198085c151648f20cba166b32582b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fb0048dee081f6fffa5f74afc3fb328483c2a30504e94a0ddd2a5114d731ec4d",
+				"dweb:/ipfs/QmZptt1nmYoA5SgjwnSgWqgUSDgm4q52Yos3xhnMv3MV43"
+			]
+		},
+		"@openzeppelin/contracts/utils/introspection/ERC165Checker.sol": {
+			"keccak256": "0xac3d50e321a48a40b4496970ce725900f13aeb2255b7c1203f5adbe98c4a911a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1d7b235b578347dce2d831a76f122e820a7db7e73fd2e47f13bafdcd61c5b066",
+				"dweb:/ipfs/QmVAELwambfJa55HfiCoz1kFFh7iYwRYeW5x8si6AFM4iX"
+			]
+		},
+		"@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f",
+				"dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
+			]
+		},
+		"@openzeppelin/contracts/utils/math/Math.sol": {
+			"keccak256": "0xe4455ac1eb7fc497bb7402579e7b4d64d928b846fce7d2b6fde06d366f21c2b3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://cc8841b3cd48ad125e2f46323c8bad3aa0e88e399ec62acb9e57efa7e7c8058c",
+				"dweb:/ipfs/QmSqE4mXHA2BXW58deDbXE8MTcsL5JSKNDbm23sVQxRLPS"
+			]
+		},
+		"@openzeppelin/contracts/utils/math/SignedMath.sol": {
+			"keccak256": "0xf92515413956f529d95977adc9b0567d583c6203fc31ab1c23824c35187e3ddc",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c50fcc459e49a9858b6d8ad5f911295cb7c9ab57567845a250bf0153f84a95c7",
+				"dweb:/ipfs/QmcEW85JRzvDkQggxiBBLVAasXWdkhEysqypj9EaB6H2g6"
+			]
+		},
+		"@openzeppelin/contracts/utils/structs/EnumerableSet.sol": {
+			"keccak256": "0x86c1470cbfd878491e5de030072b647352d36bd27122cffb928970b1945282aa",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ad85dd393ee0a1917c57046abc5155f51f77844b2c6a42c05c1b8dd26d6ff3c1",
+				"dweb:/ipfs/QmNqYc8To2NdnpP6E1tGz7t6A7beuENde5yovwov5pW1fA"
+			]
+		},
+		"contracts/implementation/Coin.sol": {
+			"keccak256": "0x48ae8bb626a8b9642a8b76612dcf1d1fdd8047d423d4aa90715630fc2d5dc536",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://19567574e6ae44b1d4dbcd75ea90dafe6d0f0aa59e4a8c36569118d7f25ff92d",
+				"dweb:/ipfs/QmYvUPNrxiH9rbR8ZkdUnBKzyP6MndkmxhXkWLuvsZJ9si"
+			]
+		},
+		"contracts/implementation/Loan.sol": {
+			"keccak256": "0x415ad45ad36b44492f08908234665107d698d2df1073057f535fee8c61a849d7",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://418978bad2412074a2a1e12e51428032e5e5d994e1e2dec38ff9f9c6028f0d40",
+				"dweb:/ipfs/Qmbjsfz8rDaVYaV365bFbU4QWfRaj9e8XUKTQ4tS33Vawm"
+			]
+		},
+		"contracts/implementation/MockOracle.sol": {
+			"keccak256": "0xefaa04f4521f9a36a45e5a0447ee99c0f56debe18b515460e492dd6984bfd197",
+			"urls": [
+				"bzz-raw://86c18957c40dd13af2c645c45886d7c9952d01a5a352d9b904959245c323747f",
+				"dweb:/ipfs/QmU4sbxZzWNUetfksZ6QeaXCN16RL765M2ZFSLHcKvmwGW"
+			]
+		},
+		"contracts/implementation/PriceConsumerV3.sol": {
+			"keccak256": "0xb47a013a2b0389ed94cf5e2583d6b2229fcbdb7e051086205a25e5f5839fa315",
+			"urls": [
+				"bzz-raw://7997c0c327bf691d93fd1c8576c6552159ed6ecc9137dc83654474a09480afb9",
+				"dweb:/ipfs/Qmemiqekw4PV3CC2vGB7oFvz7EGyVQDxpnUWaiz8fyCWhn"
+			]
+		},
+		"contracts/implementation/Vault.sol": {
+			"keccak256": "0x9b8d5310e96a0d3b8e1612a019ed7f0ea1167fb22a35d7c2e591ec68ff08b914",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://306805f0e13d766096385c406fd8910e2ab76b6bd1c797dc7d6962a9931875ed",
+				"dweb:/ipfs/QmRjLnpA7Nz1J9b4P7hV3FRsuRoMHUPCzBdLvmkqerM4Re"
+			]
+		},
+		"contracts/interfaces/AggregatorV3Interface.sol": {
+			"keccak256": "0x6d04595d5f68f36186be58f14a5a20c6cafaf49ca329136af1e9f467a62bebe5",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://10912e3975941d5ae36a86f9a1b7991f53532cb487aa3072595a6dedf4f52fe7",
+				"dweb:/ipfs/QmSacBj3Nyhkp5UH4NQCHd9ACcTJKA6eWG97BQaebpQwCz"
+			]
+		},
+		"contracts/interfaces/IVault.sol": {
+			"keccak256": "0x026336f1a4e95d32f8072d1611b23cd473369e1d940204f486945cdf93a1bd9e",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ff5091c4b8dce36727cf55db50b2927f6f8bd6c15a4ef287e1d2535d62160b66",
+				"dweb:/ipfs/Qmagh8qkz39zG8Ha23P3dWm4MgsdWehSVHD1x2Rra9eDsM"
+			]
+		},
+		"solidity-bytes-utils/contracts/BytesLib.sol": {
+			"keccak256": "0xf75784dfc94ea43668eb195d5690a1dde1b6eda62017e73a3899721583821d29",
+			"license": "Unlicense",
+			"urls": [
+				"bzz-raw://ca16cef8b94f3ac75d376489a668618f6c4595a906b939d674a883f4bf426014",
+				"dweb:/ipfs/QmceGU7qhyFLSejaj6i4dEtMzXDCSF3aYDtW1UeKjXQaRn"
+			]
+		}
+	},
+	"version": 1
+}
