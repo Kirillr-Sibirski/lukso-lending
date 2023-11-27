@@ -6,7 +6,7 @@ import ABI from '../contracts/Vault_ABI.json'
 import Onboard from '@web3-onboard/core'
 import injectedModule from '@web3-onboard/injected-wallets'
 
-const vaultAddress = '0xC3b25af71bFF4afc209812984b95E7d73bB00F73';
+const vaultAddress = '0x002944c73459DfF28a98742dc829f9F04F6Eb214';
 
 const Lending = () => {
   const [borrowableValue, setBorrowableValue] = useState(0);
@@ -14,40 +14,6 @@ const Lending = () => {
   const [walletAddress, setWalletAddress] = useState('');
 
     const connectWallet = async () => {
-        // Asking if metamask is already present or not
-        // if (window.ethereum) {
-        //     window.ethereum
-        //         .request({ method: "eth_requestAccounts" })
-        //         .then( async (res) => {
-        //             const chainId = 4201;
-        //             if (window.ethereum.networkVersion !== chainId) {
-        //                 try {
-        //                   await window.ethereum.request({
-        //                     method: 'wallet_switchEthereumChain',
-        //                     params: [{ chainId: ethers.utils.hexlify(chainId) }]
-        //                   });
-        //                 } catch (err) {
-        //                     // This error code indicates that the chain has not been added to MetaMask
-        //                   if (err.code === 4902) {
-        //                     await window.ethereum.request({
-        //                       method: 'wallet_addEthereumChain',
-        //                       params: [
-        //                         {
-        //                           chainName: 'Testnet',
-        //                           chainId: ethers.utils.hexlify(chainId),
-        //                           nativeCurrency: { name: 'LYXt', decimals: 18, symbol: 'LYXt' },
-        //                           rpcUrls: ['https://rpc.testnet.lukso.network']
-        //                         }
-        //                       ]
-        //                     });
-        //                   }
-        //                 }
-        //               }
-        //         });
-        // } else {
-        //     alert("Install Universal Profile wallet!");
-        // }
-
         const injected = injectedModule()
         
         const onboard = Onboard({
@@ -80,7 +46,7 @@ const Lending = () => {
         const signer = provider.getSigner();
         const vault = new ethers.Contract(vaultAddress, ABI, signer);
         
-        const tx = await vault.deposit(input.toString(), {value: ethers.utils.parseUnits(input,"ether"),  gasLimit: 300000, gasPrice: ethers.utils.parseUnits('30', 'gwei')});
+        const tx = await vault.deposit(ethers.utils.parseEther(input), {value: ethers.utils.parseEther(input),  gasLimit: 300000, gasPrice: ethers.utils.parseUnits('30', 'gwei')});
         await tx.wait();
     
         alert('Deposit successful!');
@@ -95,7 +61,7 @@ const Lending = () => {
         const signer = provider.getSigner();
         const vault = new ethers.Contract(vaultAddress, ABI, signer);
         
-        const tx = await vault.withdraw(input.toString());
+        const tx = await vault.withdraw(ethers.utils.parseEther(input));
         await tx.wait();
     
         alert('Withraw successful!');
@@ -111,8 +77,8 @@ const Lending = () => {
         const vault = new ethers.Contract(vaultAddress, ABI, signer);
         
         const tx = await vault.estimateTokenAmount(input);
-        setBorrowableValue(ethers.utils.formatEther(tx));
-        console.log(ethers.utils.formatEther(tx));
+        setBorrowableValue(tx.toString());
+        console.log(tx.toString());
       } catch (error) {
         console.error('Error occurred:', error);
       }
@@ -124,9 +90,9 @@ const Lending = () => {
         const signer = provider.getSigner();
         const vault = new ethers.Contract(vaultAddress, ABI, signer);
         
-        const tx = await vault.estimateCollateralAmount(ethers.utils.parseUnits(input,"ether"));
-        setCollateralValue(ethers.utils.formatEther(tx));
-        console.log(ethers.utils.formatEther(tx));
+        const tx = await vault.estimateCollateralAmount(input);
+        setCollateralValue(tx.toString());
+        console.log(tx.toString());
       } catch (error) {
         console.error('Error occurred:', error);
       }
@@ -200,7 +166,7 @@ const Lending = () => {
                 id="withdrawAmount"
                 type="text"
                 className="border-2 border-lightblue rounded px-3 py-1 focus:outline-none focus:border-blue-500"
-                placeholder="Amount"
+                placeholder="Amount of USD to deposit"
               />
             </div>
             <div className="ml-auto bg-blue-200 p-6 rounded" style={{ backgroundColor: '#85A0FF' }}>

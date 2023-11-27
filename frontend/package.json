@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@lukso/lsp-factory.js": "^3.2.1",
     "@lukso/lsp-smart-contracts": "^0.12.1",
     "@lukso/web3-onboard-config": "^1.0.3",
     "@testing-library/jest-dom": "^5.17.0",
